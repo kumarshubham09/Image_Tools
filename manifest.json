@@ -1,0 +1,16 @@
+{
+  "name": "Pixel & Vector",
+  "short_name": "PixelVector",
+  "description": "Premium Image Converter & Passport Maker",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png"
+    }
+  ]
+}

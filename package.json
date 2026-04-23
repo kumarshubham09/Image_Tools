@@ -1,0 +1,12 @@
+{
+  "name": "pixel-vector-converter",
+  "version": "1.0.0",
+  "description": "Premium Image to WebP/SVG Converter",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server ./"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

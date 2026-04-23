@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Resizer | Pixel & Vector</title>
+    <meta name="description" content="Resize your photos to any custom dimensions instantly. High quality image scaling.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="bg-container">
+        <div class="glow-orb" id="orb-1"></div>
+        <div class="glow-orb" id="orb-2"></div>
+    </div>
+
+    <main class="container">
+        <header class="header">
+            <div class="logo">
+                <i data-lucide="layers" class="logo-icon"></i>
+                <h1>Pixel<span>&</span>Vector</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Converter</a>
+                <a href="passport.html" class="nav-link">Passport Maker</a>
+                <a href="#" class="nav-link active">Photo Resizer</a>
+            </nav>
+            <p class="subtitle">Quick & Easy Image Resizing</p>
+        </header>
+
+        <section class="converter-card" id="main-card">
+            <div class="drop-zone" id="drop-zone">
+                <div class="drop-zone-content">
+                    <i data-lucide="upload-cloud" class="upload-icon"></i>
+                    <h3>Select or Drop Images</h3>
+                    <p>PNG, JPG, or JPEG (Multiple allowed)</p>
+                    <button class="btn-secondary" id="browse-btn">Browse Files</button>
+                    <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg" multiple hidden>
+                </div>
+                <div class="multi-preview-container" id="preview-container" hidden>
+                    <div id="preview-grid" class="preview-grid"></div>
+                    <button class="remove-btn-large" id="remove-btn"><i data-lucide="trash-2"></i> Clear All</button>
+                </div>
+            </div>
+
+            <div class="options-section" id="resize-options" style="display: none;">
+                <p class="section-title">Set Dimensions</p>
+                <div class="resizer-grid">
+                    <div class="input-group">
+                        <label for="width">Width (px)</label>
+                        <input type="number" id="width" placeholder="Width" min="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="height">Height (px)</label>
+                        <input type="number" id="height" placeholder="Height" min="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="target-kb">Target Size (KB - Optional)</label>
+                        <input type="number" id="target-kb" placeholder="e.g. 50" min="1">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="maintain-aspect" checked>
+                        <label for="maintain-aspect">Maintain Aspect Ratio</label>
+                    </div>
+                </div>
+                
+                <div class="format-selection" style="margin-top: 1.5rem;">
+                    <p class="section-title">Output Format</p>
+                    <div class="format-options">
+                        <label class="format-option">
+                            <input type="radio" name="output-format" value="image/jpeg" checked>
+                            <div class="option-content">
+                                <span>JPEG</span>
+                            </div>
+                        </label>
+                        <label class="format-option">
+                            <input type="radio" name="output-format" value="image/png">
+                            <div class="option-content">
+                                <span>PNG</span>
+                            </div>
+                        </label>
+                        <label class="format-option">
+                            <input type="radio" name="output-format" value="image/webp">
+                            <div class="option-content">
+                                <span>WebP</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="resize-btn" disabled>
+                <span class="btn-text">Resize Image</span>
+                <div class="loader" hidden></div>
+            </button>
+        </section>
+
+        <section class="success-card" id="success-card" hidden>
+            <div class="success-icon">
+                <i data-lucide="check-circle-2"></i>
+            </div>
+            <h2>Processing Complete!</h2>
+            <p id="success-msg">All images have been resized successfully.</p>
+            <div id="download-list" class="download-list"></div>
+            <div class="success-actions" style="margin-top: 2rem;">
+                <button id="download-all-btn" class="btn-primary">Download All</button>
+                <button class="btn-outline" id="reset-btn">Resize More</button>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2026 Pixel & Vector. Secure, Private & Fast.</p>
+        </footer>
+    </main>
+
+    <script src="resizer.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

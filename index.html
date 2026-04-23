@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel & Vector | Modern Image Converter</title>
+    <meta name="description" content="Convert images to WebP or SVG vectors instantly. Premium tools for designers and developers.">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- OpenGraph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pixel-vector.vercel.app/">
+    <meta property="og:title" content="Pixel & Vector | Modern Image Converter">
+    <meta property="og:description" content="Convert images to WebP or SVG vectors instantly. Premium tools for designers and developers.">
+    <meta property="og:image" content="https://pixel-vector.vercel.app/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Pixel & Vector | Modern Image Converter">
+    <meta property="twitter:description" content="Convert images to WebP or SVG vectors instantly. Premium tools for designers and developers.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- ImageTracer JS for SVG conversion -->
+    <script src="https://cdn.jsdelivr.net/gh/joshua-gould/ImageTracerJS/imagetracer_v1.2.6.js"></script>
+</head>
+<body>
+    <div class="bg-container">
+        <div class="glow-orb" id="orb-1"></div>
+        <div class="glow-orb" id="orb-2"></div>
+    </div>
+
+    <main class="container">
+        <header class="header">
+            <div class="logo">
+                <i data-lucide="layers" class="logo-icon"></i>
+                <h1>Pixel<span>&</span>Vector</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-link active">Converter</a>
+                <a href="passport.html" class="nav-link">Passport Maker</a>
+                <a href="resizer.html" class="nav-link">Photo Resizer</a>
+            </nav>
+            <p class="subtitle">Premium Image Conversion Tool</p>
+        </header>
+
+        <section class="converter-card" id="main-card">
+            <div class="drop-zone" id="drop-zone">
+                <div class="drop-zone-content">
+                    <i data-lucide="upload-cloud" class="upload-icon"></i>
+                    <h3>Select or Drop Image</h3>
+                    <p>PNG, JPG, or JPEG up to 10MB</p>
+                    <button class="btn-secondary" id="browse-btn">Browse Files</button>
+                    <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg" hidden>
+                </div>
+                <div class="preview-container" id="preview-container" hidden>
+                    <img id="image-preview" src="" alt="Preview">
+                    <button class="remove-btn" id="remove-btn"><i data-lucide="x"></i></button>
+                </div>
+            </div>
+
+            <div class="options-section">
+                <p class="section-title">Select Target Format</p>
+                <div class="format-options">
+                    <label class="format-option">
+                        <input type="radio" name="format" value="webp" checked>
+                        <div class="option-content">
+                            <i data-lucide="image"></i>
+                            <span>WebP (Raster)</span>
+                        </div>
+                    </label>
+                    <label class="format-option">
+                        <input type="radio" name="format" value="svg">
+                        <div class="option-content">
+                            <i data-lucide="bezier-curve"></i>
+                            <span>SVG (Vector)</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="convert-btn" disabled>
+                <span class="btn-text">Convert Image</span>
+                <div class="loader" hidden></div>
+            </button>
+        </section>
+
+        <section class="success-card" id="success-card" hidden>
+            <div class="success-icon">
+                <i data-lucide="check-circle-2"></i>
+            </div>
+            <h2>Conversion Complete!</h2>
+            <p id="success-msg">Your file is ready for download.</p>
+            <div class="success-actions">
+                <a id="download-link" class="btn-primary">Download File</a>
+                <button class="btn-outline" id="reset-btn">Convert Another</button>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2026 Pixel & Vector. Secure, Private & Fast.</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "pixel-vector-converter",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/converter", "destination": "/index.html" },
+    { "source": "/passport", "destination": "/passport.html" },
+    { "source": "/resizer", "destination": "/resizer.html" }
+  ]
+}

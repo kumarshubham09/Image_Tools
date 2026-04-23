@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passport Photo Maker | Pixel & Vector</title>
+    <meta name="description" content="Create professional passport size photos instantly. Crop, adjust, and generate printable sheets.">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- OpenGraph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pixel-vector.vercel.app/passport.html">
+    <meta property="og:title" content="Passport Photo Maker | Pixel & Vector">
+    <meta property="og:description" content="Create professional passport size photos instantly. Crop, adjust, and generate printable sheets.">
+    <meta property="og:image" content="https://pixel-vector.vercel.app/og-passport.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Cropper JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .cropper-container-custom {
+            width: 100%;
+            height: 400px;
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 0;
+        }
+
+        .editor-layout, .result-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            width: 100%;
+        }
+
+        .cropper-column, .preview-column {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .options-column, .info-column {
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 950px !important;
+            }
+            
+            .editor-layout, .result-layout {
+                flex-direction: row;
+                align-items: flex-start;
+                text-align: left;
+                gap: 40px;
+            }
+
+            .cropper-column, .preview-column {
+                flex: 1.2;
+            }
+
+            .options-column, .info-column {
+                flex: 0.8;
+                padding-left: 40px;
+                border-left: 1px solid var(--border);
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                min-height: 450px;
+                align-items: flex-start;
+            }
+
+            .success-icon {
+                margin: 0 0 24px 0;
+            }
+
+            .cropper-container-custom {
+                margin-bottom: 0;
+                height: 500px;
+            }
+
+            .sheet-preview {
+                margin-top: 0;
+                width: 100%;
+                padding: 15px;
+            }
+
+            #print-canvas {
+                max-height: 500px;
+                object-fit: contain;
+            }
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .sheet-preview {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 24px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #print-canvas {
+            max-width: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+
+        .passport-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 24px;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        select, input[type="number"] {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-container">
+        <div class="glow-orb" id="orb-1"></div>
+        <div class="glow-orb" id="orb-2"></div>
+    </div>
+
+    <main class="container">
+        <header class="header">
+            <div class="logo">
+                <i data-lucide="camera" class="logo-icon"></i>
+                <h1>Passport<span>Pro</span></h1>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Converter</a>
+                <a href="#" class="nav-link active">Passport Maker</a>
+                <a href="resizer.html" class="nav-link">Photo Resizer</a>
+            </nav>
+            <p class="subtitle">Create professional passport photos in seconds</p>
+        </header>
+
+        <section class="converter-card" id="upload-section">
+            <div class="drop-zone" id="drop-zone">
+                <div class="drop-zone-content">
+                    <i data-lucide="upload-cloud" class="upload-icon"></i>
+                    <h3>Upload Portrait Photo</h3>
+                    <p>Clear front-facing photo (PNG, JPG)</p>
+                    <button class="btn-secondary" id="browse-btn">Browse Files</button>
+                    <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg" hidden>
+                </div>
+            </div>
+        </section>
+
+        <section class="converter-card" id="editor-section" hidden>
+            <div class="editor-layout">
+                <div class="cropper-column">
+                    <div class="cropper-container-custom">
+                        <img id="cropper-image" src="" alt="To Crop">
+                    </div>
+                </div>
+
+                <div class="options-column">
+                    <div class="passport-options">
+                        <div class="option-group">
+                            <label>Passport Type (Country Standard)</label>
+                            <select id="country-select">
+                                <option value="35-45">India / EU / UK (3.5 x 4.5 cm)</option>
+                                <option value="2-2">US / Visa (2 x 2 inch)</option>
+                                <option value="33-48">China (3.3 x 4.8 cm)</option>
+                                <option value="35-35">Custom (Square)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn-primary" id="generate-btn">
+                            <i data-lucide="scissors"></i>
+                            <span>Generate Photo</span>
+                        </button>
+                        <button class="btn-outline" id="back-btn">Change Image</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="success-card" id="result-section" hidden>
+            <div class="result-layout">
+                <div class="preview-column">
+                    <div class="sheet-preview" id="preview-box">
+                        <canvas id="print-canvas"></canvas>
+                        <p style="color: #666; margin-top: 10px; font-size: 0.8rem;">Preview: 4x6 inch Landscape sheet (8 photos)</p>
+                    </div>
+                </div>
+
+                <div class="info-column">
+                    <div class="success-icon">
+                        <i data-lucide="image"></i>
+                    </div>
+                    <h2>Photo Ready!</h2>
+                    <p>Your passport photo has been generated successfully.</p>
+                    
+                    <div class="success-actions" style="margin-top: 24px; width: 100%; display: flex; flex-direction: column; gap: 12px;">
+                        <button id="download-single" class="btn-primary" style="width: 100%;">
+                            <i data-lucide="download"></i> Download Single
+                        </button>
+                        <button id="download-sheet" class="btn-secondary" style="width: 100%;">
+                            <i data-lucide="printer"></i> Download Sheet
+                        </button>
+                    </div>
+                    <button class="btn-outline" id="edit-again" style="margin-top: 16px; width: 100%;">
+                        <i data-lucide="edit"></i> Adjust Again
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2026 Pixel & Vector. Pro Tools for Professionals.</p>
+        </footer>
+    </main>
+
+    <script src="passport.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
