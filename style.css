@@ -129,14 +129,18 @@ body {
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     color: var(--text-main);
     text-decoration: none;
     font-weight: 500;
     font-size: 15px;
-    padding: 8px 12px;
+    padding: 8px 16px;
     border-radius: 20px;
     transition: all 0.2s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
 }
 
 .nav-item i {
@@ -155,9 +159,73 @@ body {
     color: var(--primary);
 }
 
-/* Dropdown Simulation */
-.nav-links {
+/* Dropdown Styles */
+.nav-dropdown {
     position: relative;
+    display: inline-block;
+}
+
+.nav-dropdown .dropdown-menu {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #ffffff;
+    min-width: 220px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+    z-index: 1010;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 8px;
+}
+
+.nav-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-main);
+    padding: 10px 14px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.dropdown-item i {
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    transition: color 0.15s ease;
+}
+
+.dropdown-item:hover {
+    background: #f8fafc;
+    color: var(--primary);
+}
+
+.dropdown-item:hover i {
+    color: var(--primary);
+}
+
+.dropdown-item.active {
+    background: #eff6ff;
+    color: var(--primary);
+}
+
+.dropdown-item.active i {
+    color: var(--primary);
 }
 
 .header-right {
@@ -336,7 +404,7 @@ body {
 .drop-zone:hover,
 .drop-zone.drag-over {
     border-color: var(--primary);
-    background: rgba(16, 185, 129, 0.05);
+    background: rgba(0, 102, 178, 0.05);
 }
 
 .upload-icon {
@@ -427,7 +495,7 @@ body {
 }
 
 .option-content {
-    background: rgba(255, 255, 255, 0.05);
+    background: #f8fafc;
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px;
@@ -439,9 +507,9 @@ body {
 }
 
 .format-option input:checked+.option-content {
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(0, 102, 178, 0.08);
     border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 15px rgba(0, 102, 178, 0.15);
 }
 
 .format-option input:checked+.option-content i {
@@ -474,7 +542,7 @@ body {
 .btn-primary:hover:not(:disabled) {
     background: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 102, 178, 0.25);
 }
 
 .btn-primary:disabled {
@@ -483,18 +551,19 @@ body {
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: #f1f5f9;
+    color: var(--text-main);
     border: 1px solid var(--border);
     padding: 10px 24px;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: #e2e8f0;
+    color: var(--primary);
 }
 
 .btn-outline {
@@ -509,7 +578,7 @@ body {
 }
 
 .btn-outline:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: #f1f5f9;
 }
 
 /* Success Card */
@@ -577,9 +646,95 @@ body {
 }
 
 /* Responsive */
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-menu-btn i {
+    width: 24px;
+    height: 24px;
+}
+
+.mobile-menu-btn:hover {
+    background-color: #f1f5f9;
+}
+
+.nav-item i {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+    transition: transform 0.2s ease;
+}
+
 @media (max-width: 1024px) {
+    .mobile-menu-btn {
+        display: flex;
+    }
+
     .nav-links {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        width: 100%;
+        height: calc(100vh - var(--header-height));
+        background: #ffffff;
+        padding: 24px;
+        gap: 16px;
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-top: 1px solid var(--border);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        align-items: stretch;
+    }
+
+    .nav-links.active {
+        transform: translateX(0);
+    }
+
+    .nav-item {
+        width: 100%;
+        justify-content: space-between;
+        padding: 14px 20px;
+        border-radius: 12px;
+        font-size: 16px;
+        border: 1px solid var(--border);
+    }
+
+    .nav-dropdown {
+        width: 100%;
+    }
+
+    .nav-dropdown .dropdown-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        padding: 4px 0 0 12px;
+        margin-top: 0;
         display: none;
+        width: 100%;
+    }
+
+    .nav-dropdown.open .dropdown-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
     }
 
     .header-right .btn-login,
@@ -639,8 +794,9 @@ body {
     font-weight: 600;
 }
 
-.input-group input {
-    background: rgba(255, 255, 255, 0.05);
+.input-group input,
+.input-group select {
+    background: #f8fafc;
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 12px;
@@ -648,12 +804,13 @@ body {
     font-family: var(--font-family);
     font-size: 1rem;
     transition: all 0.2s;
+    outline: none;
 }
 
-.input-group input:focus {
-    outline: none;
+.input-group input:focus,
+.input-group select:focus {
     border-color: var(--primary);
-    background: rgba(16, 185, 129, 0.05);
+    background: rgba(0, 102, 178, 0.05);
 }
 
 .checkbox-group {
@@ -748,7 +905,8 @@ body {
 }
 
 .download-item {
-    background: rgba(255, 255, 255, 0.05);
+    background: #f8fafc;
+    border: 1px solid var(--border);
     padding: 10px 16px;
     border-radius: 8px;
     display: flex;

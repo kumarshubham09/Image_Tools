@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Resizer | Pixel & Vector</title>
-    <meta name="description" content="Resize your photos to any custom dimensions instantly. High quality image scaling.">
+    <title>PDF to Image Converter | Pixel & Vector</title>
+    <meta name="description" content="Convert PDF pages to PNG or JPEG images instantly. Premium client-side tools.">
+    <link rel="manifest" href="manifest.json">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +13,10 @@
     <link rel="stylesheet" href="style.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <!-- JSZip for downloading all as ZIP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
     <div class="bg-container">
@@ -26,17 +31,17 @@
             </a>
             <nav class="nav-links">
                 <div class="nav-dropdown">
-                    <button class="nav-item active">Image Tools <i data-lucide="chevron-down"></i></button>
+                    <button class="nav-item">Image Tools <i data-lucide="chevron-down"></i></button>
                     <div class="dropdown-menu">
                         <a href="index.html" class="dropdown-item"><i data-lucide="image"></i> Image Converter</a>
                         <a href="passport.html" class="dropdown-item"><i data-lucide="user"></i> Passport Maker</a>
-                        <a href="resizer.html" class="dropdown-item active"><i data-lucide="maximize-2"></i> Photo Resizer</a>
+                        <a href="resizer.html" class="dropdown-item"><i data-lucide="maximize-2"></i> Photo Resizer</a>
                     </div>
                 </div>
                 <div class="nav-dropdown">
-                    <button class="nav-item">PDF Tools <i data-lucide="chevron-down"></i></button>
+                    <button class="nav-item active">PDF Tools <i data-lucide="chevron-down"></i></button>
                     <div class="dropdown-menu">
-                        <a href="pdf-to-image.html" class="dropdown-item"><i data-lucide="file-image"></i> PDF to Image</a>
+                        <a href="pdf-to-image.html" class="dropdown-item active"><i data-lucide="file-image"></i> PDF to Image</a>
                         <a href="image-to-pdf.html" class="dropdown-item"><i data-lucide="file-up"></i> Image to PDF</a>
                         <a href="merge-pdf.html" class="dropdown-item"><i data-lucide="file-plus"></i> Merge PDF</a>
                     </div>
@@ -53,72 +58,48 @@
 
     <main class="container">
         <header class="header">
-            <p class="subtitle">Quick & Easy Image Resizing</p>
+            <p class="subtitle">Convert PDF pages to PNG or JPEG images instantly</p>
         </header>
 
         <section class="converter-card" id="main-card">
             <div class="drop-zone" id="drop-zone">
                 <div class="drop-zone-content">
-                    <i data-lucide="upload-cloud" class="upload-icon"></i>
-                    <h3>Select or Drop Images</h3>
-                    <p>PNG, JPG, or JPEG (Multiple allowed)</p>
+                    <i data-lucide="file-text" class="upload-icon"></i>
+                    <h3>Select or Drop PDF File</h3>
+                    <p>PDF document up to 25MB</p>
                     <button class="btn-secondary" id="browse-btn">Browse Files</button>
-                    <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg" multiple hidden>
+                    <input type="file" id="file-input" accept="application/pdf" hidden>
                 </div>
-                <div class="multi-preview-container" id="preview-container" hidden>
-                    <div id="preview-grid" class="preview-grid"></div>
-                    <button class="remove-btn-large" id="remove-btn"><i data-lucide="trash-2"></i> Clear All</button>
-                </div>
-            </div>
-
-            <div class="options-section" id="resize-options" style="display: none;">
-                <p class="section-title">Set Dimensions</p>
-                <div class="resizer-grid">
-                    <div class="input-group">
-                        <label for="width">Width (px)</label>
-                        <input type="number" id="width" placeholder="Width" min="1">
-                    </div>
-                    <div class="input-group">
-                        <label for="height">Height (px)</label>
-                        <input type="number" id="height" placeholder="Height" min="1">
-                    </div>
-                    <div class="input-group">
-                        <label for="target-kb">Target Size (KB - Optional)</label>
-                        <input type="number" id="target-kb" placeholder="e.g. 50" min="1">
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="maintain-aspect" checked>
-                        <label for="maintain-aspect">Maintain Aspect Ratio</label>
-                    </div>
-                </div>
-                
-                <div class="format-selection" style="margin-top: 1.5rem;">
-                    <p class="section-title">Output Format</p>
-                    <div class="format-options">
-                        <label class="format-option">
-                            <input type="radio" name="output-format" value="image/jpeg" checked>
-                            <div class="option-content">
-                                <span>JPEG</span>
-                            </div>
-                        </label>
-                        <label class="format-option">
-                            <input type="radio" name="output-format" value="image/png">
-                            <div class="option-content">
-                                <span>PNG</span>
-                            </div>
-                        </label>
-                        <label class="format-option">
-                            <input type="radio" name="output-format" value="image/webp">
-                            <div class="option-content">
-                                <span>WebP</span>
-                            </div>
-                        </label>
-                    </div>
+                <div class="preview-container" id="preview-container" hidden style="background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px;">
+                    <i data-lucide="file-check" style="width: 64px; height: 64px; color: #10b981;"></i>
+                    <h4 id="pdf-filename" style="color: white; font-size: 1.1rem; max-width: 80%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">document.pdf</h4>
+                    <p id="pdf-filesize" style="color: #64748b; font-size: 0.9rem;">0.0 MB</p>
+                    <button class="remove-btn" id="remove-btn"><i data-lucide="x"></i></button>
                 </div>
             </div>
 
-            <button class="btn-primary" id="resize-btn" disabled>
-                <span class="btn-text">Resize Image</span>
+            <div class="options-section">
+                <p class="section-title">Select Target Format</p>
+                <div class="format-options">
+                    <label class="format-option">
+                        <input type="radio" name="format" value="image/png" checked>
+                        <div class="option-content">
+                            <i data-lucide="image"></i>
+                            <span>PNG (Lossless)</span>
+                        </div>
+                    </label>
+                    <label class="format-option">
+                        <input type="radio" name="format" value="image/jpeg">
+                        <div class="option-content">
+                            <i data-lucide="file-image"></i>
+                            <span>JPEG (Standard)</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="convert-btn" disabled>
+                <span class="btn-text">Convert PDF to Images</span>
                 <div class="loader" hidden></div>
             </button>
         </section>
@@ -127,12 +108,16 @@
             <div class="success-icon">
                 <i data-lucide="check-circle-2"></i>
             </div>
-            <h2>Processing Complete!</h2>
-            <p id="success-msg">All images have been resized successfully.</p>
-            <div id="download-list" class="download-list"></div>
-            <div class="success-actions" style="margin-top: 2rem;">
-                <button id="download-all-btn" class="btn-primary">Download All</button>
-                <button class="btn-outline" id="reset-btn">Resize More</button>
+            <h2>Conversion Complete!</h2>
+            <p id="success-msg">All PDF pages have been rendered to images.</p>
+            
+            <div id="download-list" class="download-list" style="max-height: 250px; overflow-y: auto; margin-bottom: 24px;"></div>
+
+            <div class="success-actions">
+                <button id="download-all-btn" class="btn-primary" style="flex: 1;">
+                    <i data-lucide="download"></i> Download All as ZIP
+                </button>
+                <button class="btn-outline" id="reset-btn" style="flex: 0.5;">Convert Another</button>
             </div>
         </section>
 
@@ -141,7 +126,7 @@
         </footer>
     </main>
 
-    <script src="resizer.js"></script>
+    <script src="pdf-to-image.js"></script>
     <script>
         lucide.createIcons();
 
